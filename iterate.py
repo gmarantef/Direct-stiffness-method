@@ -11,8 +11,7 @@ import random
 import pandas as pd
 from itertools import combinations_with_replacement
 
-from assistant import createstructure as cs
-from method import stiffnessmethod as sm
+from method import stiffnessmethod as sm, createstructure as cs
 
 
 def state_iterations(number_state_efforts: int, number_materials: int,

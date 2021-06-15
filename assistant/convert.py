@@ -1,27 +1,18 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun  3 11:00:34 2021
+from typing import List, Tuple
 
-@author: Guillermo
-"""
-
-from typing import Union, List
+from properties import EffortVector, DeformationVector
 
 
-# Convierte las listas de objetos a listas de flotantes y strings
-def convert(efforts_list: List[object], deformations_list: List[object]):
-    # Convertir las listas de esfuerzos y deformaciones de objetos a float/str
-    efforts_list_modified: List[Union[float, str]] = []
-    deformations_list_modified: List[Union[float, str]] = []
-    for value in efforts_list:
-        try:
-            efforts_list_modified.append(float(value))
-        except:
-            efforts_list_modified.append(str(value))
-    for value in deformations_list:
-        try:
-            deformations_list_modified.append(float(value))
-        except:
-            deformations_list_modified.append(str(value))
-    
-    return efforts_list_modified, deformations_list_modified
+def convert_to_list(effort_vectors: List[EffortVector],
+                    deformation_vectors: List[DeformationVector]) -> Tuple[List[float], List[float]]:
+
+    effort_list: List[float] = []
+    deformation_list: List[float] = []
+
+    for value in effort_vectors:
+        effort_list.extend([value.fx, value.fy, value.mz])
+
+    for value in deformation_vectors:
+        deformation_list.extend([value.dx, value.dy, value.phi])
+
+    return effort_list, deformation_list

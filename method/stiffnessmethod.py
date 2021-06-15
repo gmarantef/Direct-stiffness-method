@@ -1,99 +1,28 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May 24 14:16:40 2021
-
-@author: Guillermo
-"""
-
-from typing import Union, List, Tuple
+from typing import List, Tuple
 import numpy as np
 
+from creator.bo.joints import Joint
+from creator.bo.webs import Web
+from creator.bo.vectors import EffortVector, DeformationVector
+from method.auxiliarfunct import fillmatrix as fill
+from method.auxiliarfunct import nodaldisplacements as nodal
+from method.auxiliarfunct import finalvectors as vec
+from assistant import convert
 
-# Ensamblaje de la matriz global
-def stiffness_method(joints_list: List[object], webs_list: List[object],
-                     efforts_list_modified: List[Union[float, str]],
-                     deformations_list_modified: List[Union[float, str]],
-                     structure_type: str,
-                     joints_number: int) -> Tuple[np.ndarray, 
-                                                  np.ndarray, 
-                                                  np.ndarray]:
-    k_g: np.ndarray = np.zeros((3 * len(joints_list), 3 * len(joints_list)))
+
+def stiffness_method(joints: List[Joint], webs: List[Web], effort_vectors: List[EffortVector],
+                     deformation_vectors: List[DeformationVector]) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+
+    k_g: np.ndarray = np.zeros((3 * len(joints), 3 * len(joints)))
+
+    k_g = fill.fill_diagonal(k_g, joints, webs)
+    k_g = fill.fill_up_diagonal(k_g, joints, webs)
+    k_g = fill.fill_down_diagonal(k_g, joints, webs)
+
+    effort_list, deformation_list = convert.convert_to_list(effort_vectors, deformation_vectors)
+
+    unknown_deformations = nodal.nodal_displacements(k_g, joints, effort_list)
+
+    final_efforts_vector, final_deformations_vector = vec.final_vectors(k_g, unknown_deformations, deformation_list)
     
-    # Evalúo nudo tras nudo para sacar los elementos de la diagonal
-    for joint in joints_list:
-        kn: np.ndarray = np.zeros((3,3))
-        for web in webs_list:
-            if web.joint_start == joint:
-                kn += web.kg_aa
-            elif web.joint_end == joint:
-                kn += web.kg_bb
-            else: False
-        row: int = (joint.number - 1)*3
-        for n in range(3):
-            column: int = row - n
-            for m in range(3):
-                k_g[row,column] = kn[n,m]
-                column += 1
-            row += 1
-            
-    # Evalúo nudo tras nudo para sacar los elementos encima de la diagonal
-    for joint in joints_list:
-        for web in webs_list:
-            if web.joint_start == joint:
-                column: int = (web.joint_end.number - 1)*3
-                for m in range(3):
-                    row: int = (web.joint_start.number - 1)*3
-                    for n in range(3):
-                        k_g[row,column] = web.kg_ab[n,m]
-                        row += 1
-                    column += 1
-                    
-    # Genero los elementos debajo de la diagonal como simétricos a los de arriba (traspuestas)
-    for joint in joints_list:
-        for web in webs_list:
-            if web.joint_start == joint:
-                row: int = (web.joint_end.number - 1)*3
-                for n in range(3):
-                    column: int = (web.joint_start.number - 1)*3
-                    for m in range(3):
-                        k_g[row,column] = web.kg_ba[n,m]
-                        column += 1
-                    row += 1
-    
-    # Cálculo de los desplazamientos nodales
-    known_efforts_list: List[float] = []
-    index_list: List[int] = []
-    if structure_type == "no articulada":
-        for index, value in enumerate(efforts_list_modified):
-            if type(value) is not str :
-                known_efforts_list.append(value)
-                index_list.append(index)
-    elif structure_type == "articulada":
-        ban_list: np.ndarray = np.arange(2, joints_number * 3, 3)
-        for index, value in enumerate(efforts_list_modified):
-            if type(value) is not str and index not in ban_list:
-                known_efforts_list.append(value)
-                index_list.append(index)
-    
-    k_min: np.ndarray = np.zeros((len(index_list), len(index_list)))
-    for a, i in enumerate(index_list):
-        for b, j in enumerate(index_list):
-            k_min[a,b] = k_g[i,j]
-            
-    calculated_deformations_list: List[float] = list(np.dot(np.linalg.inv(k_min),
-                                                     np.transpose(np.array(known_efforts_list))))
-    
-    # Vector de esfuerzos y deformaciones
-    n: int = 0
-    deformations_vector: np.ndarray = np.empty((len(deformations_list_modified)))
-    for index, value in enumerate(deformations_list_modified):
-        if type(value) is str:
-            deformations_vector[index] = calculated_deformations_list[n]
-            n += 1
-        else:
-            deformations_vector[index] = deformations_list_modified[index]
-            
-    efforts_vector: np.ndarray = np.dot(k_g,
-                                          np.transpose(np.array(deformations_vector)))
-    
-    return k_g, efforts_vector, deformations_vector
+    return k_g, final_efforts_vector, final_deformations_vector

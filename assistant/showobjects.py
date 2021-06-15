@@ -1,44 +1,45 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May 24 13:30:46 2021
-
-@author: Guillermo
-"""
-
 from typing import List
 
+from creator.bo.materials import Material
+from creator.bo.sections import Section
+from creator.bo.joints import Joint
+from creator.bo.webs import Web
 
-# Funciones para mostrar los nudos, materiales, perfiles, barras y 
-# ancho de banda de una estructura
-def show_materials(materials_list: List[object]):
+
+def show_materials(materials: List[Material]):
+
     print("\nLista de materiales\n")
-    for material in materials_list:
+    for material in materials:
         print(material)
 
 
-def show_sections(sections_list: List[object]):
+def show_sections(sections: List[Section]):
+
     print("\nLista de perfiles\n")
-    for section in sections_list:
+    for section in sections:
         print(section)
 
 
-def show_joints(joints_list: List[object]):
+def show_joints(joints: List[Joint]):
+
     print("\nLista de nudos\n")
-    for joint in joints_list:
+    for joint in joints:
         print(joint)
 
 
-def show_webs(webs_list: List[object]):
+def show_webs(webs: List[Web]):
+
     print("\nLista de barras\n")
-    for web in webs_list:
+    for web in webs:
         print(web)
 
    
-def bandwidth(webs_list: List[object]):
+def bandwidth(webs: List[Web]):
+
     bandwidth_list: List[int] = []
     
-    for web in webs_list:
+    for web in webs:
         bandwidth_list.append(web.joint_end.number - web.joint_start.number)
-    
-    bandwidth: int = max(bandwidth_list)
-    print("El ancho de banda de la estructura es = {}".format(bandwidth))
+
+    max_bandwidth: int = max(bandwidth_list)
+    print(f"El ancho de banda de la estructura es = {max_bandwidth}")
