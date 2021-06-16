@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import List
 import numpy as np
 import pandas as pd
 
@@ -52,7 +52,7 @@ final_deformations_vector: List[float]
 k_g, final_efforts_vector, final_deformations_vector = smet.stiffness_method(joints, webs, effort_vectors,
                                                                              deformation_vectors)
 
-# Iteraciones de estados de carga, materiales y perfiles distintos
+""""# Iteraciones de estados de carga, materiales y perfiles distintos
 number_state_efforts = 100    # Número de estados de carga
 number_materials = 10    # Número de materiales a escoger
 number_sections = 10    # Número de secciones a escoger
@@ -67,4 +67,4 @@ effort_max = 500.0    # Máximo esfuerzo que pueda aparecer
                      efforts_list_modified,
                      deformations_list_modified,
                      materials_list, sections_list,
-                     joints_positions, deformation_array)
+                     joints_positions, deformation_array)"""
