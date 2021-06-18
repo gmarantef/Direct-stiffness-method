@@ -21,7 +21,6 @@ STRUCTURE_TYPE = "articulada"
 # Los materiales y perfiles se organizan en arrays en el mismo orden que hasta ahora
 #
 # Nudos estado inicial de carga
-joints_number: int = 6
 joints_positions: List[PositionVector] = [PositionVector(0.0, 0.0), PositionVector(2.0, 3.46),
                                           PositionVector(4.0, 6.92), PositionVector(4.0, 0.0),
                                           PositionVector(6.0, 3.46), PositionVector(8.0, 0.0)]
@@ -35,7 +34,6 @@ deformation_vectors: List[DeformationVector] = [DeformationVector(None, 0.0, 0.0
                                                 DeformationVector(None, None, 0.0),
                                                 DeformationVector(0.0, 0.0, 0.0)]
 # Barras
-webs_number: int = 10
 web_locations: List[WebVector] = [WebVector(1, 2), WebVector(2, 3), WebVector(3, 4), WebVector(1, 4),
                                   WebVector(2, 4), WebVector(2, 5), WebVector(3, 5), WebVector(4, 5),
                                   WebVector(4, 6), WebVector(5, 6)]
@@ -54,3 +52,7 @@ web_sections: List[WebSectionVector] = [WebSectionVector("IPN 220"), WebSectionV
                                         WebSectionVector("IPN 220"), WebSectionVector("IPN 220"),
                                         WebSectionVector("IPN 220"), WebSectionVector("IPN 220"),
                                         WebSectionVector("IPN 220"), WebSectionVector("IPN 220")]
+
+# Parámetros para la iteración y obtención del Dataset
+NUMBER_STATE_EFFORTS = 100    # Número de estados de carga
+EFFORT_MAX: int = 500    # Máximo esfuerzo que pueda aparecer en + o -

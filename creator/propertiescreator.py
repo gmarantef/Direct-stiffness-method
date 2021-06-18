@@ -8,8 +8,8 @@ from creator.bo.sections import Section
 
 class PropertiesCreator:
 
-    def __init__(self, work_materials_dataset: pd.DataFrame, work_sections_dataset: pd.DataFrame,
-                 web_materials: List[WebMaterialVector], web_sections: List[WebSectionVector]) -> None:
+    def __init__(self, work_materials_dataset: pd.DataFrame = None, work_sections_dataset: pd.DataFrame = None,
+                 web_materials: List[WebMaterialVector] = None, web_sections: List[WebSectionVector] = None) -> None:
 
         self.work_materials_dataset = work_materials_dataset
         self.work_sections_dataset = work_sections_dataset

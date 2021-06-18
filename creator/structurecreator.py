@@ -5,14 +5,14 @@ from creator.bo.materials import Material
 from creator.bo.sections import Section
 from creator.bo.joints import Joint
 from creator.bo.webs import Web
-from assistant import websnames
+from assistant.websnames import webs_names
 
 
 class StructureCreator:
 
-    def __init__(self, joints_positions: List[PositionVector], effort_vectors: List[EffortVector],
-                 deformation_vectors: List[DeformationVector], web_locations: List[WebVector],
-                 materials: List[Material], sections: List[Section]) -> None:
+    def __init__(self, joints_positions: List[PositionVector] = None, effort_vectors: List[EffortVector] = None,
+                 deformation_vectors: List[DeformationVector] = None, web_locations: List[WebVector] = None,
+                 materials: List[Material] = None, sections: List[Section] = None, joints: List[Joint] = None) -> None:
 
         self.joint_number = len(joints_positions)
         self.joints_positions = joints_positions
@@ -23,7 +23,10 @@ class StructureCreator:
         self.materials = materials
         self.sections = sections
 
-        self.joints = self.create_joints()
+        if joints is None:
+            self.joints = self.create_joints()
+        else:
+            self.joints = joints
         self.webs = self.create_webs()
 
     def create_joints(self) -> List[Joint]:
@@ -42,7 +45,7 @@ class StructureCreator:
 
         webs: List[Web] = []
 
-        alphabet_ext: List[str] = websnames.webs_names(self.web_number)
+        alphabet_ext: List[str] = webs_names(self.web_number)
 
         for i in range(self.web_number):
             for joint in self.joints:

@@ -1,7 +1,7 @@
 from typing import List
 import numpy as np
 
-from properties import STRUCTURE_TYPE
+from assistant.banlist import ban
 from creator.bo.joints import Joint
 
 
@@ -9,10 +9,8 @@ def nodal_displacements(k_g: np.ndarray, joints: List[Joint], effort_list: List[
 
     known_efforts: List[float] = []
     index_list: List[int] = []
-    ban_list: np.ndarray = np.empty(len(joints) * 3)
 
-    if STRUCTURE_TYPE == "articulada":
-        ban_list: np.ndarray = np.arange(2, len(joints) * 3, 3)
+    ban_list = ban(joints)
 
     for index, value in enumerate(effort_list):
         if value is not None and index not in ban_list:

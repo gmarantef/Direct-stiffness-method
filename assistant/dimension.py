@@ -5,7 +5,7 @@ from creator.bo.vectors import PositionVector, EffortVector, DeformationVector
 
 
 def dimension_problem(joints_positions: List[PositionVector], effort_vectors: List[EffortVector],
-                      deformation_vectors: List[DeformationVector]) -> str:
+                      deformation_vectors: List[DeformationVector]) -> None:
 
     message: str
     if len(joints_positions) == len(effort_vectors) == len(deformation_vectors):
@@ -14,4 +14,4 @@ def dimension_problem(joints_positions: List[PositionVector], effort_vectors: Li
         message = "Los datos de la estructura son incoherentes"
         sys.exit()
 
-    return message
+    return print(message)

@@ -3,7 +3,7 @@ import numpy as np
 
 
 def final_vectors(k_g: np.ndarray, unknown_deformations: List[float],
-                  deformation_list: List[float]) -> Tuple[float, float]:
+                  deformation_list: List[float]) -> Tuple[np.ndarray, np.ndarray]:
 
     n: int = 0
     final_deformations_vector: np.ndarray = np.empty((len(deformation_list)))
